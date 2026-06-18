@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+/* Your custom CSS variables */
+:root {
+  --bg-color: #2F3E46;
+  --text-color: #CAD2C5;
+  --primary: #84A98C;
+  --secondary: #52796F;
+  --accent: #354F52;
+}
+
+/* 1. We tell Tailwind v4 about your brand colors */
+@theme {
+  --color-brand-100: #CAD2C5;
+  --color-brand-300: #84A98C;
+  --color-brand-500: #52796F;
+  --color-brand-700: #354F52;
+  --color-brand-900: #2F3E46;
+}
+
+/* 2. We write the exact floating animation instructions */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* 3. We create the custom classes used in your HTML */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 6s ease-in-out 3s infinite;
+}
