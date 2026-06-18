@@ -4,10 +4,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from dotenv import load_dotenv
-
-# Load sensitive keys from .env file
-load_dotenv()
 
 app = Flask(__name__)
 # Allows your frontend domain to communicate securely with this API
@@ -26,14 +22,11 @@ def send_smtp_email(name, reply_to_email, user_message):
     msg["Reply-To"] = reply_to_email
 
     # Compose a clean text body
-    body_content = f"You received a new message from your portfolio contact form:\n\n" \
-                   f"Name: {name}\n" \
-                   f"Email: {reply_to_email}\n\n" \
-                   f"Message:\n{user_message}"
+    body_content = f"You received a new message from your portfolio contact form:\n\nName: {name}\nEmail: {reply_to_email}\n\nMessage:\n{user_message}"
     
     msg.attach(MIMEText(body_content, "plain", "utf-8"))
 
-# Establish a secure SSL connection with Google's SMTP server
+    # Establish a secure SSL connection with Google's SMTP server
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(sender, password)
         server.sendmail(sender, receiver, msg.as_string())
@@ -50,7 +43,7 @@ def handle_contact_form():
         email = data.get("email")
         message = data.get("message")
 
-        # Basic server-side validation validation
+        # Basic server-side validation
         if not name or not email or not message:
             return jsonify({"error": "All form fields are strictly required."}), 400
 
