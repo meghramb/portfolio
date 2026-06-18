@@ -1,37 +1,3 @@
-const handleFormSubmit = async (event) => {
-    event.preventDefault();
-
-    const formData = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        message: document.getElementById("message").value
-    };
-
-    try {
-        // Replace with your local URL during testing, or your Render production link later
-        const response = await fetch('/api/contact', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formData)
-        });
-
-        const result = await response.get_json();
-
-        if (response.ok) {
-            alert("Success! Check your inbox.");
-            document.getElementById("contactForm").reset(); // Clear inputs
-        } else {
-            alert("Error: " + result.error);
-        }
-    } catch (err) {
-        console.error("Network connectivity issue:", err);
-        alert("Failed to reach the backend application server.");
-    }
-};
-
-
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Dynamic Year in Footer
     const yearEl = document.getElementById('year');
@@ -209,43 +175,39 @@ const contactForm = document.getElementById('contactForm');
 
 if (contactForm) {
     contactForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Stop page from refreshing
+        event.preventDefault(); 
 
-        // Get the values the user typed
         const formData = {
             name: document.getElementById('name').value,
             email: document.getElementById('email').value,
             message: document.getElementById('message').value
         };
 
-        // Change button text so the user knows it's loading
         const submitBtn = contactForm.querySelector('button[type="submit"]');
         const originalBtnText = submitBtn.innerHTML;
         submitBtn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin ml-2"></i>';
 
         try {
-            // Send the data to your Flask backend
             const response = await fetch('/api/contact', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
 
-            const result = await response.json();
-
-            if (response.ok) {
-                alert('Success! Your message has been sent.');
-                contactForm.reset(); // Clear the form
-            } else {
-                alert('Error: ' + result.error);
+            // If Vercel crashes, it sends HTML instead of JSON. This catches it:
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Server Error ${response.status}: Vercel crashed before sending the email.`);
             }
+
+            const result = await response.json();
+            alert('Success! Your message has been sent.');
+            contactForm.reset(); 
+
         } catch (err) {
-            console.error('Fetch error:', err);
-            alert('Could not connect to the server. Please ensure the backend is running.');
+            console.error('Full Error Details:', err);
+            alert(err.message); // This will now show us the REAL error!
         } finally {
-            // Put the button text back to normal
             submitBtn.innerHTML = originalBtnText;
         }
     });
