@@ -175,3 +175,24 @@
 @media (max-width: 767px) {
                     .timeline-line { left: 30px !important; transform: none !important; }
                 }
+
+/* Theme Utility Classes */
+.theme-text {
+    color: var(--text-color);
+}
+
+.theme-primary {
+    color: var(--primary);
+}
+
+.theme-secondary {
+    color: var(--secondary);
+}
+
+.theme-accent {
+    color: var(--accent);
+}
+
+.theme-border {
+    border-color: var(--glass-border);
+}
